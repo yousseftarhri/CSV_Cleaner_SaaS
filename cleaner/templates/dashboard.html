@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSV Dashboard</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <header class="header">CSV Cleaner SaaS</header>
+    <main class="flex-center">
+        <div class="card">
+            <h2>CSV Dashboard</h2>
+            <p class="text-gray"><strong>Filename:</strong> {{ file_info.filename }}</p>
+            <p class="text-gray"><strong>Rows:</strong> {{ file_info.rows }}</p>
+            <p class="text-gray"><strong>Columns:</strong> {{ file_info.columns|join:", " }}</p>
+            <a href="{% url 'home' %}" class="button">Upload Another CSV</a>
+        </div>
+    </main>
+</body>
+</html>
+
