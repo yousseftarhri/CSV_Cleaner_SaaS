@@ -1,62 +1,81 @@
 body {
-    background-color: #f3f4f6;
-    font-family: 'Inter', sans-serif;
+    font-family: Arial, sans-serif;
+    background: #f9fafb;
     margin: 0;
     padding: 0;
+    color: #333;
 }
 
 .header {
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 1.5rem;
     text-align: center;
-    font-weight: bold;
-    font-size: 2rem;
-    color: #1f2937;
+    padding: 2rem;
+    background: #fff;
+    border-bottom: 1px solid #eee;
 }
 
-.flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 4rem);
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
 }
 
 .card {
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border-radius: 0.5rem;
-    padding: 2rem;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-left: 5px solid transparent;
 }
 
-.button {
-    background-color: #1f2937;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    display: inline-block;
-    margin-top: 1rem;
-    text-decoration: none;
+.card.passed { border-left-color: #22c55e; }
+.card.warning { border-left-color: #f59e0b; }
+.card.failed { border-left-color: #ef4444; }
+
+.card h3 {
+    margin: 0;
 }
 
-.button:hover {
-    background-color: #111827;
-}
-
-.input-file {
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-    width: 100%;
+.desc {
+    color: #666;
     margin-bottom: 1rem;
 }
 
-.text-gray {
-    color: #4b5563;
+.status {
+    margin-bottom: 1rem;
+    font-weight: bold;
 }
+
+.progress-bar {
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.progress {
+    height: 100%;
+    border-radius: 4px;
+    background: #3b82f6;
+}
+
+.summary {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1.5rem;
+    background: #fff;
+    border-top: 1px solid #eee;
+}
+
+.summary-box {
+    text-align: center;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.summary-box.green { background: #22c55e; }
+.summary-box.yellow { background: #f59e0b; }
+.summary-box.red { background: #ef4444; }

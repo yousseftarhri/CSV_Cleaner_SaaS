@@ -3,20 +3,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CSV Dashboard</title>
+    <title>Data Quality Dashboard</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
-    <header class="header">CSV Cleaner SaaS</header>
-    <main class="flex-center">
-        <div class="card">
-            <h2>CSV Dashboard</h2>
-            <p class="text-gray"><strong>Filename:</strong> {{ file_info.filename }}</p>
-            <p class="text-gray"><strong>Rows:</strong> {{ file_info.rows }}</p>
-            <p class="text-gray"><strong>Columns:</strong> {{ file_info.columns|join:", " }}</p>
-            <a href="{% url 'home' %}" class="button">Upload Another CSV</a>
+    <header class="header">
+        <h1>Data Quality Dashboard</h1>
+        <p>Monitor and track data quality across all systems</p>
+        <h2>Overall Score: {{ overall_score }}%</h2>
+    </header>
+
+    <main class="dashboard-grid">
+        {% for check in checks %}
+        <div class="card {{ check.status }}">
+            <h3>Data {{ check.name }}</h3>
+            <p class="desc">{{ check.description }}</p>
+
+            <div class="status">
+                {% if check.status == "passed" %}
+                ✅ Passed
+                {% elif check.status == "warning" %}
+                ⚠️ Warning
+                {% else %}
+                ❌ Failed
+                {% endif %}
+            </div>
+
+            <div class="score">
+                <strong>Quality Score:</strong> {{ check.score }}%
+                <div class="progress-bar">
+                    <div class="progress" style="width: {{ check.score }}%"></div>
+                </div>
+            </div>
+
+            <p><strong>{{ check.issues }}</strong> issues found</p>
+            <p>Last checked: {{ check.last_checked }}</p>
         </div>
+        {% endfor %}
     </main>
+
+    <footer class="summary">
+        <div class="summary-box green">Passed Checks <br> <strong>{{ passed }}</strong></div>
+        <div class="summary-box yellow">Warning Checks <br> <strong>{{ warnings }}</strong></div>
+        <div class="summary-box red">Failed Checks <br> <strong>{{ failed }}</strong></div>
+    </footer>
 </body>
 </html>
-
