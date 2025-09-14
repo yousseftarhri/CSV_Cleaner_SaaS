@@ -95,7 +95,17 @@ def invalid_categorical_values(df, column_name):
     except Exception as e:
         logging.exception("An error occurred")
         return f"error"
-df = pd.read_excel("new_test_data.xlsx")
 
-c=categorical_columns(df.columns)
-print(invalid_categorical_values(df,c[-1]))
+def identify_id_column_prompt(columns):
+    prompt = f"""You are an expert in identifying ID-related column names in structured datasets. Given a list of column names, determine which column most likely represents an ID, return only its name.
+
+    **Instructions:**  
+    - The column name should explicitly indicate it contains an identifier (e.g., `id`, `user_id`, `order_id`, `customer_id`).  
+    - If multiple column names seem relevant, return the one that is most commonly used as an ID.  
+    - If no suitable column is found, return not found.  
+    - Return only the column name or not found —do not include any explanations.  
+
+    user question: column names, {columns} 
+    """
+
+    return generate_ai(prompt)

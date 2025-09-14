@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 import pandas as pd
 from .data_quality.checks import uniqueness_check
-from .data_quality.checks import completeness_check
+from .data_quality.checks import completeness_check, check_categorical_validity_ai
+from .ai_checks.llm import categorical_columns, identify_id_column_prompt
 CSV_INFO = {}
 
 def home(request):
@@ -42,11 +43,15 @@ def dashboard(request):
         return redirect("home")
 
     total_fields = df.shape[0] * df.shape[1]  # total cells
-
+    columns = df.columns
+    categorical_columns_ = categorical_columns(columns)
+    id_column = identify_id_column_prompt(columns)
     # Run completeness check
     completeness_score, completeness_issues = completeness_check(
-        df, id_column="Observation ID", total_fields=total_fields
+        df, total_fields=total_fields
     )
+
+    error_df, categorical_validity_score, total_invalid = check_categorical_validity_ai(df, categorical_columns_, id_column, total_fields)
 
     checks = [
         {
@@ -57,7 +62,54 @@ def dashboard(request):
             "issues": completeness_issues,
             "last_checked": "just now",
         },
-        # other checks will be added later…
+        {
+            "name": "Accuracy",
+            "description": "Correctness and validity of data",
+            "status": "warning",
+            "score": 78,
+            "issues": 3,
+            "last_checked": "5 min ago",
+        },
+        {
+            "name": "Consistency",
+            "description": "Format and standard compliance",
+            "status": "passed",
+            "score": 91,
+            "issues": 0,
+            "last_checked": "1 min ago",
+        },
+        {
+            "name": "Timeliness",
+            "description": "Freshness and update frequency",
+            "status": "failed",
+            "score": 45,
+            "issues": 12,
+            "last_checked": "10 min ago",
+        },
+        {
+            "name": "Uniqueness",
+            "description": "Duplicate record detection",
+            "status": "passed",
+            "score": 98,
+            "issues": 0,
+            "last_checked": "3 min ago",
+        },
+        {
+            "name": "Validity",
+            "description": "Business rule compliance",
+            "status": "warning",
+            "score": categorical_validity_score,
+            "issues": 5,
+            "last_checked": "just now",
+        },
+        {
+            "name": "Integrity",
+            "description": "Referential integrity checks",
+            "status": "passed",
+            "score": 89,
+            "issues": 1,
+            "last_checked": "4 min ago",
+        },
     ]
 
     overall_score = sum(c["score"] for c in checks) // len(checks)
